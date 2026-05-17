@@ -98,21 +98,7 @@
         }
       }
     },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2022-04-01",
-      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), parameters('functionAppName'), variables('keyVaultSecretsUserRoleId'))]",
-      "scope": "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]",
-      "properties": {
-        "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', variables('keyVaultSecretsUserRoleId'))]",
-        "principalId": "[reference(parameters('functionAppName'), '2022-09-01', 'Full').identity.principalId]",
-        "principalType": "ServicePrincipal"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-      ]
-    }
+
   ],
   "outputs": {
     "functionAppPrincipalId": {
