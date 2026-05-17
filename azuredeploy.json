@@ -21,8 +21,7 @@
   },
   "variables": {
     "storageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
-    "appServicePlanName": "[concat('plan-', parameters('functionAppName'))]",
-    "keyVaultSecretsUserRoleId": "4633458b-17de-408a-b874-0445c86b69e6"
+    "appServicePlanName": "[concat('plan-', parameters('functionAppName'))]"
   },
   "resources": [
     {
@@ -66,44 +65,4 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-09-01",
       "name": "[parameters('functionAppName')]",
-      "location": "[parameters('location')]",
-      "kind": "functionapp",
-      "identity": { "type": "SystemAssigned" },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), 'MyAppSecret')]"
-      ],
-      "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2023-01-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
-            },
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~4"
-            },
-            {
-              "name": "FUNCTIONS_WORKER_RUNTIME",
-              "value": "dotnet"
-            },
-            {
-              "name": "MySecretFromKv",
-              "value": "[concat('@Microsoft.KeyVault(SecretUri=https://', parameters('keyVaultName'), '.vault.azure.net/secrets/MyAppSecret/)')]"
-            }
-          ]
-        }
-      }
-    },
-
-  ],
-  "outputs": {
-    "functionAppPrincipalId": {
-      "type": "string",
-      "value": "[reference(parameters('functionAppName'), '2022-09-01', 'Full').identity.principalId]"
-    }
-  }
-}
+      "location": "[parameters('locatio
