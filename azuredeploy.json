@@ -65,4 +65,48 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-09-01",
       "name": "[parameters('functionAppName')]",
-      "location": "[parameters('locatio
+      "location": "[parameters('location')]",
+      "kind": "functionapp",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2023-01-01').keys[0].value)]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~4"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "dotnet"
+            },
+            {
+              "name": "MySecret",
+              "value": "[concat('@Microsoft.KeyVault(SecretUri=https://', parameters('keyVaultName'), '.vault.azure.net/secrets/MyAppSecret/)')]"
+            }
+          ]
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      }
+    }
+  ],
+  "outputs": {
+    "functionAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', parameters('functionAppName'), '.azurewebsites.net')]"
+    },
+    "keyVaultUri": {
+      "type": "string",
+      "value": "[concat('https://', parameters('keyVaultName'), '.vault.azure.net')]"
+    }
+  }
+}

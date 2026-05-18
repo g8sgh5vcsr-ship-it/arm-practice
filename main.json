@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "functionAppName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "storageDeployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "relativePath": "storage.json"
+        },
+        "parameters": {
+          "location": { "value": "[parameters('location')]" }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "functionAppDeployment",
+      "dependsOn": [
+        "storageDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "relativePath": "functionapp.json"
+        },
+        "parameters": {
+          "functionAppName": { "value": "[parameters('functionAppName')]" },
+          "location": { "value": "[parameters('location')]" },
+          "storageAccountName": { 
+            "value": "[reference('storageDeployment').outputs.storageAccountName.value]" 
+          }
+        }
+      }
+    }
+  ]
+}
