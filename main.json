@@ -18,7 +18,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "relativePath": "storage.json"
+          "uri": "https://dev.azure.com/SahanaSaravanan/Sahana%20azure%20learn/_apis/git/repositories/Sahana%20azure%20learn/items?path=/storage.json&api-version=7.0"
         },
         "parameters": {
           "location": { "value": "[parameters('location')]" }
@@ -35,7 +35,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "relativePath": "functionapp.json"
+          "uri": "https://dev.azure.com/SahanaSaravanan/Sahana%20azure%20learn/_apis/git/repositories/Sahana%20azure%20learn/items?path=/functionapp.json&api-version=7.0"
         },
         "parameters": {
           "functionAppName": { "value": "[parameters('functionAppName')]" },
